@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { seaStormColors } from "../utils/colors";
+import { seaStormColors } from "../../utils/colors";
 import * as React from "react";
 
 interface SidebarIconProps {

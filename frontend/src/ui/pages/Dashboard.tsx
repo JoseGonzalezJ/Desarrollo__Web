@@ -1,75 +1,48 @@
-// Dashboard.tsx
-import { useEffect, useState, useRef } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MetricCard } from "../components/MetricCard"
-import { MonitoringChart } from "../components/MonitoringChart"
-import { seaStormColors } from "../utils/colors"
-import socket from "../utils/socket"
-
-interface SensorData {
-  temperature: string
-  humidity: string
-  ph: string
-  nutrients: string
-}
-
-// Componente reutilizable para mensajes de alerta
-function AlertMessage({ message, bgColor, borderColor, textColor }: { message: string; bgColor: string; borderColor: string; textColor: string }) {
-  return (
-    <div
-      className="p-2 rounded border"
-      style={{ backgroundColor: bgColor, borderColor: borderColor, color: textColor }}
-    >
-      {message}
-    </div>
-  )
-}
+import { useEffect, useState, useRef } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
+import { MetricCard } from "../components/MetricCard";
+import { MonitoringChart } from "../components/MonitoringChart";
+import { seaStormColors } from "../../utils/colors";
+import { AxiosSensorApi } from "../../adapters/AxiosSensorApi";
+import { AlertMessage } from "../components/ui/AlertMessage"; 
 
 export default function Dashboard() {
-  const [sensorData, setSensorData] = useState<SensorData>({
+  const [sensorData, setSensorData] = useState({
     temperature: "0",
     humidity: "0",
     ph: "0",
     nutrients: "0",
-  })
+  });
 
-  const isSubscribed = useRef(false) // Evita múltiples suscripciones al socket
+  const isSubscribed = useRef(false);
 
   useEffect(() => {
     if (!isSubscribed.current) {
-      socket.on("sensorData", (data: SensorData) => setSensorData(data))
-      isSubscribed.current = true
+      AxiosSensorApi.subscribeToSensorData((data) => setSensorData(data));
+      isSubscribed.current = true;
     }
 
     return () => {
-      socket.off("sensorData")
-      isSubscribed.current = false
-    }
-  }, [])
+      isSubscribed.current = false;
+    };
+  }, []);
 
-  // Convertimos los valores numéricos una sola vez
   const parsedData = {
     temperature: Number.parseFloat(sensorData.temperature),
     humidity: Number.parseFloat(sensorData.humidity),
     ph: Number.parseFloat(sensorData.ph),
     nutrients: Number.parseFloat(sensorData.nutrients),
-  }
+  };
 
   return (
     <div className="flex flex-col w-full h-screen overflow-hidden" style={{ backgroundColor: seaStormColors.background }}>
-      {/* Header */}
-      <header
-        className="flex h-16 shrink-0 items-center px-6 border-b bg-white shadow-sm"
-        style={{ borderColor: seaStormColors.sand.medium }}
-      >
+      <header className="flex h-16 shrink-0 items-center px-6 border-b bg-white shadow-sm" style={{ borderColor: seaStormColors.sand.medium }}>
         <h1 className="text-2xl font-bold" style={{ color: seaStormColors.blue.dark }}>
           Mushroom Monitoring System
         </h1>
       </header>
 
-      {/* Main Content */}
       <main className="flex-1 p-6 space-y-6 overflow-y-auto">
-        {/* Metric Cards */}
         <div className="grid gap-4 md:grid-cols-4">
           <MetricCard title="Humidity" value={parsedData.humidity} unit="%" status="optimal" />
           <MetricCard title="Temperature" value={parsedData.temperature} unit="°C" status="optimal" />
@@ -77,12 +50,9 @@ export default function Dashboard() {
           <MetricCard title="Soil Nutrients" value={parsedData.nutrients} unit="%" status="optimal" />
         </div>
 
-        {/* Monitoring Chart */}
         <MonitoringChart sensorData={sensorData} />
 
-        {/* Additional Information */}
         <div className="grid gap-4 md:grid-cols-2">
-          {/* System Status */}
           <Card className="shadow-lg" style={{ backgroundColor: seaStormColors.cardBg, borderColor: seaStormColors.sand.medium }}>
             <CardHeader>
               <CardTitle style={{ color: seaStormColors.blue.dark }}>System Status</CardTitle>
@@ -105,7 +75,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Alerts */}
           <Card className="shadow-lg" style={{ backgroundColor: seaStormColors.cardBg, borderColor: seaStormColors.sand.medium }}>
             <CardHeader>
               <CardTitle style={{ color: seaStormColors.blue.dark }}>Alerts</CardTitle>
@@ -132,5 +101,5 @@ export default function Dashboard() {
         </div>
       </main>
     </div>
-  )
+  );
 }

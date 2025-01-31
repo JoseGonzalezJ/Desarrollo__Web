@@ -3,10 +3,10 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/components/ui/Card";
 import { Thermometer, Droplets, FlaskConical, Gauge } from "lucide-react";
 import { SidebarIcon } from "./SidebarIcon";
-import { seaStormColors } from "../utils/colors";
+import { seaStormColors } from "../../utils/colors";
 
 interface SensorData {
   temperature: string;

@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { getStatusColor, seaStormColors } from "../utils/colors";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
+import { Badge } from "./ui/Badge";
+import { getStatusColor, seaStormColors } from "../../utils/colors";
 
 interface MetricCardProps {
   title: string;

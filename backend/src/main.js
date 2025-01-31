@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { sequelize } from './infrastructure/database/SequelizeConfig.js'; // Conexión con la base de datos
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -6,14 +7,12 @@ import cors from 'cors';
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server, { 
-  cors: { origin: process.env.CORS_ORIGIN || '*' } 
+const io = new Server(server, {
+  cors: { origin: process.env.CORS_ORIGIN || '*' }
 });
 
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(express.json());
-
-console.log('Servidor iniciado. Esperando conexiones...');
 
 // Simulador de datos con manejo de errores
 setInterval(() => {
@@ -48,5 +47,8 @@ process.on('SIGINT', () => {
   });
 });
 
-const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
+// Sincronización con la base de datos (sequelize)
+sequelize.sync().then(() => {
+  const PORT = process.env.PORT || 4000;
+  server.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
+});
