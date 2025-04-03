@@ -1,4 +1,11 @@
+import { SensorModel } from '../../infrastructure/database/index.js';
+
 export class SensorRepository {
-    create(sensor) { throw new Error('Método no implementado'); }
-    findAll() { throw new Error('Método no implementado'); }
+  async create(sensor) {
+    return SensorModel.create(sensor);
   }
+
+  async findAll() {
+    return SensorModel.findAll();
+  }
+}

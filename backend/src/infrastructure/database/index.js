@@ -1,4 +1,4 @@
-import { sequelize } from './SequelizeConfig';
+import { sequelize } from './SequelizeConfig.js';
 import { DataTypes } from 'sequelize';
 
 export const SensorModel = sequelize.define('Sensor', {

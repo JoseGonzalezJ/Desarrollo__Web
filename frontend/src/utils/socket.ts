@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 
+// La URL de conexión de WebSocket debe coincidir con la del backend
 const SOCKET_URL = import.meta.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:4000";
 
 const socket = io(SOCKET_URL, {
